@@ -1,16 +1,158 @@
-# React + Vite
+# 📘 README — GSAP + SVG Mask + Displacement Animation Tutorial
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Overview
 
-Currently, two official plugins are available:
+This project demonstrates how to use GSAP and ScrollTrigger to animate an SVG circle mask with a displacement filter that reveals an image when the user scrolls.
+The effect looks like a distorted circle growing as you scroll.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+🧩 Project Breakdown
+📂 File: App.jsx
+🚀 GSAP Setup
 
-## React Compiler
+<code>
+gsap.registerPlugin(ScrollTrigger);
+</code>
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+🎬 GSAP Animation
 
-## Expanding the ESLint configuration
+```js
+useGSAP(() => {
+  gsap.to(".displacement", {
+    r: 500,
+    scrollTrigger: {
+      trigger: ".wrapper",
+      start: "top 20%",
+      end: "top 0%",
+      scrub: true,
+      markers: true,
+    },
+  });
+});
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+You animate the radius (r) of the circle from whatever it starts at (0) to 500.
+
+✔ ScrollTrigger options explained
+
+```sql
+
+| Option          | Meaning                                                                  |
+| --------------- | ------------------------------------------------------------------------ |
+| `trigger`       | The element that activates the animation.                                |
+| `"top 20%"`     | Animation starts when the top of `.wrapper` reaches 20% of the viewport. |
+| `"top 0%"`      | Animation ends when the top reaches 0%.                                  |
+| `scrub: true`   | The animation is tied smoothly to scroll position.                       |
+| `markers: true` | Shows visual markers to debug start/end.                                 |
+
+```
+
+🎨 HTML + SVG Breakdown
+
+```html
+<div className="wrapper">
+  <div className="svg-wrapper">
+    <svg>
+      <defs></defs>
+    </svg>
+  </div>
+</div>
+```
+
+A container for definitions used later—filters, masks, gradients, etc.
+These don’t draw anything directly.
+
+✔ <filter>
+
+Defines a graphical effect that can distort images.
+
+✔ <feTurbulence>
+
+Creates random noise.
+
+```sql
+
+| Attribute              | Meaning                                             |
+| ---------------------- | --------------------------------------------------- |
+| `type="fractalNoise"`  | Smooth, organic noise.                              |
+| `baseFrequency="0.15"` | Higher = more turbulence.                           |
+| `numOctaves="2"`       | More layers = richer noise.                         |
+| `result="NOISE"`       | Gives this noise a name so next filters can use it. |
+| Attribute              | Meaning                                          |
+| ---------------------- | ------------------------------------------------ |
+| `in="SourceGraphic"`   | The shape/image to distort.                      |
+| `in2="NOISE"`          | The turbulence effect.                           |
+| `scale="350"`          | Strength of distortion.                          |
+| `xChannelSelector="R"` | Use the red channel to move pixels horizontally. |
+| `yChannelSelector="G"` | Use the green channel to move pixels vertically. |
+
+
+```
+
+### Displacement
+
+```js
+<feDisplacementMap
+  in="SourceGraphic"
+  in2="NOISE"
+  scale="350"
+  xChannelSelector="R"
+  yChannelSelector="G"
+/>
+```
+
+🎭 The Mask
+
+<mask id="mask">
+  <circle
+    cx="110%"
+    cy="50%"
+    r="0"
+    fill="white"
+    className="displacement"
+    filter="url(#myfilter)"
+  />
+</mask>
+
+✔ How masks work
+
+White areas are visible
+
+Black areas are hidden
+
+This circle begins with radius 0, and GSAP increases it as we scroll.
+
+```sql
+| Attribute                 | Meaning                                     |
+| ------------------------- | ------------------------------------------- |
+| `cx="110%"`               | Circle starts off-screen on the right.      |
+| `cy="50%"`                | Center vertically.                          |
+| `r="0"`                   | Starts invisible.                           |
+| `fill="white"`            | Mask needs white to show the image.         |
+| `filter="url(#myfilter)"` | Apply distortion effect to the circle edge. |
+
+
+```
+
+✔ How masks work
+
+White areas are visible
+
+Black areas are hidden
+
+This circle begins with radius 0, and GSAP increases it as we scroll.
+
+🖼 Applying Mask to Image
+
+```jsx
+<image mask="url(#mask)" href="your-image-url" className="h-full w-full" />
+```
+✔ What this does
+
+The image is always there, but we only see the part covered by the growing, distorted circle.
+
+
+🧱 Page Structure
+<div className="scrolldiv h-screen"></div>
+
+
+These “empty screens” create scroll space so the animation can play.
