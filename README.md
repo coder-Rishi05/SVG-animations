@@ -146,13 +146,69 @@ This circle begins with radius 0, and GSAP increases it as we scroll.
 ```jsx
 <image mask="url(#mask)" href="your-image-url" className="h-full w-full" />
 ```
+
 ✔ What this does
 
 The image is always there, but we only see the part covered by the growing, distorted circle.
 
-
 🧱 Page Structure
+
 <div className="scrolldiv h-screen"></div>
 
-
 These “empty screens” create scroll space so the animation can play.
+
+### 🧩 How the SVG Mask Works (Diagram)
+
+```pgsql
+
+ ---------------------------------------------------------
+|                         SVG IMAGE                       |
+|    (Full image underneath, but not yet visible)         |
+ ---------------------------------------------------------
+                     ▲
+                     | mask applied
+                     ▼
+
+ ---------------------------------------------------------
+|                         MASK                            |
+|                                                         |
+|   MASK RULE:                                            |
+|   - White area = visible                                |
+|   - Black/transparent = hidden                          |
+|                                                         |
+|       cx="110%"                                         |
+|              ●  <--- circle starts off-screen           |
+|             /|\                                         |
+|              | displacement filter applied              |
+|                                                         |
+|   As radius (r) grows from 0 → 500                      |
+|   the white area expands and reveals more of the image. |
+|                                                         |
+ ---------------------------------------------------------
+                     ▲
+                     | filtered circle reveals image
+                     ▼
+
+ ---------------------------------------------------------
+|                VISIBLE RESULT DURING SCROLL             |
+|                                                         |
+|     A distorted circle expands, revealing the image      |
+|     underneath as you scroll.                           |
+ ---------------------------------------------------------
+
+```
+### 🌀 Visual Flow (Simplified)
+
+```scss
+User scrolls
+      ↓
+GSAP increases circle r (radius)
+      ↓
+Mask white area expands
+      ↓
+Image becomes visible through circle
+      ↓
+Displacement filter distorts the edges
+
+
+```
