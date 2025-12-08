@@ -11,7 +11,7 @@ const Triangle = () => {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: ".triangle-wrapper",
-        start: "top 80%",
+        start: "top 30%",
         end: "top 10%",
         scrub: true,
         markers: true,
@@ -46,13 +46,17 @@ const Triangle = () => {
 
       <div className="triangle-wrapper h-screen w-full flex items-center justify-center bg-slate-900">
         <div className="svg-wrapper h-[60%] w-[80%]">
-          <svg className="h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <svg
+            className="h-full w-full"
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
+          >
             <defs>
               <filter id="tri-filter">
                 <feTurbulence
                   type="fractalNoise"
-                  baseFrequency="0.25"
-                  numOctaves="2"
+                  baseFrequency="0.10"
+                  numOctaves="5"
                   result="NOISE"
                 />
                 <feDisplacementMap
@@ -93,7 +97,7 @@ const Triangle = () => {
               y="0"
               width="50"
               height="100"
-              href="https://cdn.pixabay.com/photo/2016/11/29/09/32/beach-1868772_1280.jpg"
+              href="https://i.pinimg.com/1200x/33/22/b7/3322b76dd8d310b6bb04f295aae561af.jpg"
               preserveAspectRatio="xMidYMid slice"
               mask="url(#tri-mask-left)"
             />
@@ -104,7 +108,7 @@ const Triangle = () => {
               y="0"
               width="50"
               height="100"
-              href="https://cdn.pixabay.com/photo/2017/03/27/13/28/girl-2179037_1280.jpg"
+              href="https://i.pinimg.com/1200x/f3/dd/08/f3dd0857b6fd16047b8033b944b72afa.jpg"
               preserveAspectRatio="xMidYMid slice"
               mask="url(#tri-mask-right)"
             />

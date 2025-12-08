@@ -11,7 +11,8 @@ const Circle = () => {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: ".circle-wrapper",
-        start: "top 80%",
+        start: "top 40%",
+        duration: 2,
         end: "top 10%",
         scrub: true,
         markers: true,
@@ -20,7 +21,7 @@ const Circle = () => {
 
     // LEFT CIRCLE → top se center
     tl.to(".circle-left", {
-      attr: { cy: "50%", r: 450 }, // start me 0% se aa rahi hogi
+      attr: { cy: "50%", r: 550 }, // start me 0% se aa rahi hogi
       ease: "none",
     });
 
@@ -40,7 +41,7 @@ const Circle = () => {
       {/* Just for scroll space */}
       <div className="h-screen w-full"></div>
 
-      <div className="circle-wrapper h-screen w-full flex items-center justify-center bg-black">
+      <div className="circle-wrapper h-screen w-full flex items-center justify-center ">
         <div className="svg-wrapper h-[60%] w-[80%]">
           <svg className="h-full w-full">
             <defs>
@@ -48,7 +49,7 @@ const Circle = () => {
               <filter id="circle-filter">
                 <feTurbulence
                   type="fractalNoise"
-                  baseFrequency="0.3"
+                  baseFrequency="0.110"
                   numOctaves="2"
                   result="NOISE"
                 />
@@ -101,7 +102,7 @@ const Circle = () => {
               x="50%"
               height="100%"
               width="50%"
-              href="https://cdn.pixabay.com/photo/2016/11/29/04/17/adventure-1868816_1280.jpg"
+              href="https://i.pinimg.com/736x/42/e1/8f/42e18fcd2b236e57c0b8517bea6bd979.jpg"
               preserveAspectRatio="xMidYMid slice"
               mask="url(#circle-mask-right)"
             />
